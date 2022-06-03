@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.opensmarthouse.bom</groupId>
+    <artifactId>openhab</artifactId>
+    <version>3.0.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>org.opensmarthouse.bom.openhab</groupId>
+  <artifactId>core</artifactId>
+  <version>3.0.0-SNAPSHOT</version>
+
+  <packaging>pom</packaging>
+
+  <name>OpenSmartHouse BOM - openHAB - core</name>
+  <description>This project contains the BOM for openHAB Core</description>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.openhab.core.bom</groupId>
+                  <artifactId>org.openhab.core.bom.openhab-core</artifactId>
+                  <version>${openhab-core.version}</version>
+                  <type>pom</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.directory}</outputDirectory>
+                  <destFileName>openhab-core-bom.xml</destFileName>
+                </artifactItem>
+              </artifactItems>
+              <!-- other configurations here -->
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <version>1.0.2</version>
+        <configuration>
+          <transformationSets>
+            <transformationSet>
+              <dir>${project.build.directory}/</dir>
+              <outputDir>${project.build.directory}/</outputDir>
+              <stylesheet>${project.basedir}/../bom.xsl</stylesheet>
+              <parameters>
+                <parameter>
+                  <name>VERSION</name>
+                  <value>${openhab-core.version}</value>
+                </parameter>
+                <parameter>
+                  <name>RESULT_GROUP_ID</name>
+                  <value>${project.groupId}.proper</value>
+                </parameter>
+                <parameter>
+                  <name>BOM_PARENT_GROUP_ID</name>
+                  <value>${project.groupId}</value>
+                </parameter>
+                <parameter>
+                  <name>BOM_PARENT_ARTIFACT_ID</name>
+                  <value>${project.artifactId}</value>
+                </parameter>
+                <parameter>
+                  <name>BOM_VERSION</name>
+                  <value>${project.version}</value>
+                </parameter>
+              </parameters>
+              <includes>
+                <include>openhab-core-bom.xml</include>
+              </includes>
+              <fileMappers>
+                <fileMapper implementation="org.codehaus.plexus.components.io.filemappers.RegExpFileMapper">
+                  <pattern>openhab-core-bom.xml</pattern>
+                  <replacement>openhab-core-proper-bom.xml</replacement>
+                </fileMapper>
+              </fileMappers>
+            </transformationSet>
+          </transformationSets>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>transform</goal>
+            </goals>
+            <phase>compile</phase>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
